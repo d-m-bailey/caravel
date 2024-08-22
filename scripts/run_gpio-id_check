@@ -123,7 +123,7 @@ fi
 
 echo "Step 2. comparing expected values to layout values..."
 if [[ -f $CHIP_ID_SOURCE ]]; then
-	echo "Reading gpio defaults from $CHIP_ID_SOURCE" |
+	echo "Reading chip id from $CHIP_ID_SOURCE" |
 		tee -a $log_file
 else
 	printf "\n** Missing $CHIP_ID_SOURCE **\n" |
