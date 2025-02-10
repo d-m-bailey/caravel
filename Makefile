@@ -94,11 +94,8 @@ STD_CELL_LIBRARY ?= sky130_fd_sc_hd
 SPECIAL_VOLTAGE_LIBRARY ?= sky130_fd_sc_hvl
 IO_LIBRARY ?= sky130_fd_io
 PRIMITIVES_LIBRARY ?= sky130_fd_pr
-SKYWATER_COMMIT ?= f70d8ca46961ff92719d8870a18a076370b85f6c
 OPEN_PDKS_COMMIT ?= 12df12e2e74145e31c5a13de02f9a1e176b56e67
 # = 1.0.303
-PDK_MAGIC_COMMIT ?= 085131b090cb511d785baf52a10cf6df8a657d44
-# = 8.3.294
 
 .DEFAULT_GOAL := ship
 # We need portable GDS_FILE pointers...
@@ -280,55 +277,19 @@ uncompress-caravel:
 
 # Digital Wrapper
 # verify that the wrapper was respected
-xor-wrapper: uncompress uncompress-caravel
-### first erase the user's user_project_wrapper.gds
-	sh $(CARAVEL_ROOT)/utils/erase_box.sh gds/user_project_wrapper.gds 0 0 2920 3520
-### do the same for the empty wrapper
-	sh $(CARAVEL_ROOT)/utils/erase_box.sh $(CARAVEL_ROOT)/gds/user_project_wrapper_empty.gds 0 0 2920 3520
-	mkdir -p signoff/user_project_wrapper_xor
-### XOR the two resulting layouts
-	sh $(CARAVEL_ROOT)/utils/xor.sh \
-		$(CARAVEL_ROOT)/gds/user_project_wrapper_empty_erased.gds gds/user_project_wrapper_erased.gds \
-		user_project_wrapper user_project_wrapper.xor.xml
-	sh $(CARAVEL_ROOT)/utils/xor.sh \
-		$(CARAVEL_ROOT)/gds/user_project_wrapper_empty_erased.gds gds/user_project_wrapper_erased.gds \
-		user_project_wrapper gds/user_project_wrapper.xor.gds > signoff/user_project_wrapper_xor/xor.log 
-	rm $(CARAVEL_ROOT)/gds/user_project_wrapper_empty_erased.gds gds/user_project_wrapper_erased.gds
-	mv gds/user_project_wrapper.xor.gds gds/user_project_wrapper.xor.xml signoff/user_project_wrapper_xor
-	python $(CARAVEL_ROOT)/utils/parse_klayout_xor_log.py \
-		-l signoff/user_project_wrapper_xor/xor.log \
-		-o signoff/user_project_wrapper_xor/total.txt
-### screenshot the result for convenience
-	sh $(CARAVEL_ROOT)/utils/scrotLayout.sh \
-		$(PDK_ROOT)/$(PDK)/libs.tech/klayout/$(PDK).lyt \
-		signoff/user_project_wrapper_xor/user_project_wrapper.xor.gds
-	@cat signoff/user_project_wrapper_xor/total.txt
+.PHONY xor-wrapper
+xor-wrapper:
+	@echo "The xor-wrapper target has been removed."
+	@echo "This check is part of mpw_precheck."
+	@exit 1
 
 # Analog Wrapper
 # verify that the wrapper was respected
-xor-analog-wrapper: uncompress uncompress-caravel
-### first erase the user's user_project_wrapper.gds
-	sh $(CARAVEL_ROOT)/utils/erase_box.sh gds/user_analog_project_wrapper.gds 0 0 2920 3520 -8 -8 
-### do the same for the empty wrapper
-	sh $(CARAVEL_ROOT)/utils/erase_box.sh $(CARAVEL_ROOT)/gds/user_analog_project_wrapper_empty.gds 0 0 2920 3520 -8 -8 
-	mkdir -p signoff/user_analog_project_wrapper_xor
-### XOR the two resulting layouts
-	sh $(CARAVEL_ROOT)/utils/xor.sh \
-		$(CARAVEL_ROOT)/gds/user_analog_project_wrapper_empty_erased.gds gds/user_analog_project_wrapper_erased.gds \
-		user_analog_project_wrapper user_analog_project_wrapper.xor.xml
-	sh $(CARAVEL_ROOT)/utils/xor.sh \
-		$(CARAVEL_ROOT)/gds/user_analog_project_wrapper_empty_erased.gds gds/user_analog_project_wrapper_erased.gds \
-		user_analog_project_wrapper gds/user_analog_project_wrapper.xor.gds > signoff/user_analog_project_wrapper_xor/xor.log 
-	rm $(CARAVEL_ROOT)/gds/user_analog_project_wrapper_empty_erased.gds gds/user_analog_project_wrapper_erased.gds
-	mv gds/user_analog_project_wrapper.xor.gds gds/user_analog_project_wrapper.xor.xml signoff/user_analog_project_wrapper_xor
-	python $(CARAVEL_ROOT)/utils/parse_klayout_xor_log.py \
-		-l signoff/user_analog_project_wrapper_xor/xor.log \
-		-o signoff/user_analog_project_wrapper_xor/total.txt
-### screenshot the result for convenience
-	sh $(CARAVEL_ROOT)/utils/scrotLayout.sh \
-		$(PDK_ROOT)/$(PDK)/libs.tech/klayout/$(PDK).lyt \
-		signoff/user_analog_project_wrapper_xor/user_analog_project_wrapper.xor.gds
-	@cat signoff/user_analog_project_wrapper_xor/total.txt
+.PHONY xor-analog-wrapper
+xor-analog-wrapper:
+	@echo "The xor-analog-wrapper target has been removed."
+	@echo "This check is part of mpw_precheck."
+	@exit 1
 
 # LVS
 BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
