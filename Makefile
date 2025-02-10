@@ -1350,21 +1350,36 @@ manifest: mag/ maglef/ verilog/rtl/ Makefile
 	touch manifest && \
 	find verilog/rtl/* -type f ! -name "caravel_netlists.v" ! -name "user_*.v" ! -name "README" ! -name "defines.v" -exec shasum {} \; > manifest && \
 	shasum scripts/set_user_id.py scripts/generate_fill.py scripts/compositor.py >> manifest
+	# since the order of files returned by find is indeterminate, sort the final output by filename
+	sort -k2,2 -o manifest manifest
 # shasum lef/user_project_wrapper_empty.lef >> manifest
 # find maglef/*.mag -type f ! -name "user_project_wrapper.mag" -exec shasum {} \; >> manifest && \
 # shasum mag/caravel.mag mag/.magicrc >> manifest
 
 .PHONY: master_manifest
 master_manifest:
+	# to get the shasums of compressed files, first create a list of the compressed files
+	# uncompress them, take the shasums, and then recompress the files
+	shopt -s nullglob; \
+	ls verilog/rtl/*.$(ARCHIVE_EXT) verilog/gl/*.$(ARCHIVE_EXT) lef/*.lef.$(ARCHIVE_EXT) def/*.def.$(ARCHIVE_EXT) mag/*.mag.$(ARCHIVE_EXT) \
+		maglef/*.mag.$(ARCHIVE_EXT) spi/lvs/*.spice.$(ARCHIVE_EXT) gds/*.gds.$(ARCHIVE_EXT) | \
+	sed 's/\.'$(ARCHIVE_EXT)'\>//g' > manifest.compressed.list && sleep 2
 	find verilog/rtl/* -type f -exec shasum {} \; > master_manifest && \
 	find verilog/gl/* -type f -exec shasum {} \; >> master_manifest && \
 	shasum scripts/set_user_id.py scripts/generate_fill.py scripts/compositor.py >> master_manifest && \
-	find lef/*.lef -type f -exec shasum {} \; >> master_manifest && \
-	find def/*.def -type f -exec shasum {} \; >> master_manifest && \
-	find mag/*.mag -type f  -exec shasum {} \; >> master_manifest && \
-	find maglef/*.mag -type f -exec shasum {} \; >> master_manifest && \
-	find spi/lvs/*.spice -type f -exec shasum {} \; >> master_manifest && \
-	find gds/*.gds -type f -exec shasum {} \; >> master_manifest 
+	find lef -name "*.lef" -type f -exec shasum {} \; >> master_manifest && \
+	find def -name "*.def" -type f -exec shasum {} \; >> master_manifest && \
+	find mag -name "*.mag" -type f  -exec shasum {} \; >> master_manifest && \
+	find maglef -name "*.mag" -type f -exec shasum {} \; >> master_manifest && \
+	find spi/lvs -name "*.spice" -type f -exec shasum {} \; >> master_manifest && \
+	find gds -name "*.gds" -type f -exec shasum {} \; >> master_manifest 
+	# since file compression options may be different, do not uncompress and recompress
+	for file in $$(cat manifest.compressed.list); do \
+		echo "$$( $(UNCOMPRESS) -c $$file | shasum | awk '{print $$1}' )  $$file" >> master_manifest; \
+	done
+	# since the order of files returned by find is indeterminate, sort the final output by filename
+	sort -k2,2 -o master_manifest master_manifest
+	rm -rf manifest.compressed.list
 	
 .PHONY: check-env
 check-env:
