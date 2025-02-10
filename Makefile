@@ -84,9 +84,6 @@ UPRJ_ROOT ?= $(shell pwd)
 # MANAGEMENT AREA ROOT
 MGMT_AREA_ROOT ?= $(shell pwd)/mgmt_core_wrapper 
 
-# Build tasks such as make ship, make generate_fill, make set_user_id, make final run in the foreground (1) or background (0)
-FOREGROUND ?= 1
-
 # Ensure commands which are piped through tee return the correct exit code
 # to make
 SHELL=/bin/bash -o pipefail
@@ -107,16 +104,9 @@ PDK_MAGIC_COMMIT ?= 085131b090cb511d785baf52a10cf6df8a657d44
 # We need portable GDS_FILE pointers...
 .PHONY: ship
 ship: check-env uncompress uncompress-caravel
-ifeq ($(FOREGROUND),1)
 	@echo "Running make ship in the foreground..."
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __ship
 	@echo "Make ship completed." 2>&1 | tee -a ./signoff/build/make_ship.out
-else
-	@echo "Running make ship in the background..."
-	nohup $(MAKE) -f $(CARAVEL_ROOT)/Makefile __ship >/dev/null 2>&1 &
-	tail -f signoff/build/make_ship.out
-	@echo "Make ship completed."  2>&1 | tee -a ./signoff/build/make_ship.out
-endif
 
 __ship:
 	@echo "###############################################"
@@ -152,20 +142,11 @@ __ship:
 ###	@rm $(UPRJ_ROOT)/mag/mag2gds_caravel.tcl
 
 truck: check-env uncompress uncompress-caravel
-ifeq ($(FOREGROUND),1)
 	@echo "Running make truck in the foreground..."
 	mkdir -p ./signoff
 	mkdir -p ./build
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __truck
 	@echo "Make truck completed." 2>&1 | tee -a ./signoff/build/make_truck.out
-else
-	@echo "Running make truck in the background..."
-	mkdir -p ./signoff
-	mkdir -p ./build
-	nohup $(MAKE) -f $(CARAVEL_ROOT)/Makefile __truck >/dev/null 2>&1 &
-	tail -f signoff/build/make_truck.out
-	@echo "Make truck completed."  2>&1 | tee -a ./signoff/build/make_truck.out
-endif
 
 __truck: 
 	@echo "###############################################"
@@ -202,16 +183,9 @@ __truck:
 
 .PHONY: openframe
 openframe: check-env uncompress uncompress-caravel
-ifeq ($(FOREGROUND),1)
 	@echo "Running make openframe in the foreground..."
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __openframe
 	@echo "Make openframe completed." 2>&1 | tee -a ./signoff/build/make_openframe.out
-else
-	@echo "Running make openframe in the background..."
-	nohup $(MAKE) -f $(CARAVEL_ROOT)/Makefile __openframe >/dev/null 2>&1 &
-	tail -f signoff/build/make_openframe.out
-	@echo "Make openframe completed."  2>&1 | tee -a ./signoff/build/make_openframe.out
-endif
 
 __openframe:
 	@echo "###############################################"
@@ -1143,16 +1117,9 @@ caravel_timing_fast: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v 
 ###########################################################################
 .PHONY: generate_fill
 generate_fill: check-env check-uid check-project uncompress
-ifeq ($(FOREGROUND),1)
 	@echo "Running generate_fill in the foreground..."
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __generate_fill
 	@echo "Generate fill completed." 2>&1 | tee -a ./signoff/build/generate_fill.out
-else
-	@echo "Running generate_fill in the background..."
-	@nohup $(MAKE) -f $(CARAVEL_ROOT)/Makefile __generate_fill >/dev/null 2>&1 &
-	tail -f signoff/build/generate_fill.out
-	@echo "Generate fill completed." | tee -a signoff/build/generate_fill.out
-endif
 
 __generate_fill:
 	@mkdir -p ./signoff/build
@@ -1163,14 +1130,8 @@ __generate_fill:
 
 .PHONY: final
 final: check-env check-uid check-project uncompress uncompress-caravel
-ifeq ($(FOREGROUND),1)
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __final
 	@echo "Final build completed." 2>&1 | tee -a ./signoff/build/final_build.out
-else
-	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __final >/dev/null 2>&1 &
-	tail -f signoff/build/final_build.out
-	@echo "Final build completed." 2>&1 | tee -a ./signoff/build/final_build.out
-endif
 
 __final:
 	python3 $(CARAVEL_ROOT)/scripts/compositor.py $(USER_ID) $(PROJECT) $(shell pwd) $(CARAVEL_ROOT)/mag $(shell pwd)/gds -keep
@@ -1179,14 +1140,8 @@ __final:
 
 .PHONY: set_user_id
 set_user_id: check-env check-uid uncompress uncompress-caravel
-ifeq ($(FOREGROUND),1)
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __set_user_id
 	@echo "Set user ID completed." 2>&1 | tee -a ./signoff/build/set_user_id.out
-else
-	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __set_user_id >/dev/null 2>&1 &
-	tail -f signoff/build/set_user_id.out
-	@echo "Set user ID completed." 2>&1 | tee -a ./signoff/build/set_user_id.out
-endif
 
 __set_user_id: 
 	mkdir -p ./signoff/build
@@ -1200,14 +1155,8 @@ __set_user_id:
 
 .PHONY: gpio_defaults
 gpio_defaults: check-env uncompress uncompress-caravel
-ifeq ($(FOREGROUND),1)
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __gpio_defaults
 	@echo "GPIO defaults completed." 2>&1 | tee -a ./signoff/build/__gpio_defaults.out
-else
-	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __gpio_defaults >/dev/null 2>&1 &
-	tail -f signoff/build/gpio_defaults.out
-	@echo "GPIO defaults completed." 2>&1 | tee -a ./signoff/build/__gpio_defaults.out
-endif
 
 __gpio_defaults:
 	mkdir -p ./signoff/build
