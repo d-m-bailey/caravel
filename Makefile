@@ -1281,13 +1281,44 @@ pdk: check-env pdk-with-volare
 pdk-with-volare: check-env venv/manifest.txt
 	./venv/bin/volare enable ${OPEN_PDKS_COMMIT}
 
+.PHONY: install-volare
+install-volare:
+	@echo "The install-volare target has been removed."
+	@echo "To delete and reinstall: make -B venv/manifest.txt"
+	@exit 1
+
 .PHONY: clean-pdk
 clean-pdk:
 	rm -rf $(PDK_ROOT)
 
+.PHONY: skywater-pdk
+skywater-pdk:
+	@echo "The skywater-pdk target has been removed."
+	@echo "To install the pdk with volare: make pdk-with-volare"
+	@exit 1
+
+### OPEN_PDKS
+.PHONY: open-pdks
+open-pdks:
+	@echo "The open-pdks target has been removed."
+	@echo "To install the pdk with volare: make pdk-with-volare"
+	@exit 1
+
+.PHONY: sky130
+sky130:
+	@echo "The sky130 target has been removed."
+	@echo "To install the pdk with volare: make pdk-with-volare"
+	@exit 1
+
+.PHONY: gen-sources
+gen-sources:
+	@echo "The gen-sources target has been removed."
+	@echo "The $(PDK_ROOT)/$(PDK)/SOURCES file is created by volare."
+	@exit 1
+
 # Make README.rst
 README.rst: README.src.rst docs/source/getting-started.rst docs/source/tool-versioning.rst openlane/README.src.rst docs/source/caravel-with-openlane.rst Makefile ./venv/manifest.txt
-	rm -f README.rst && \
+	rm -f README.rst openlane/README.rst && \
 		./venv/bin/rst_include include README.src.rst - | \
 			sed \
 				-e's@\.\/\_static@\/docs\/source\/\_static@g' \
@@ -1314,7 +1345,7 @@ venv/manifest.txt: ./requirements.txt
 
 ###########################################################################
 	
-.RECIPE: manifest
+.PHONY: manifest
 manifest: mag/ maglef/ verilog/rtl/ Makefile
 	touch manifest && \
 	find verilog/rtl/* -type f ! -name "caravel_netlists.v" ! -name "user_*.v" ! -name "README" ! -name "defines.v" -exec shasum {} \; > manifest && \
@@ -1323,7 +1354,7 @@ manifest: mag/ maglef/ verilog/rtl/ Makefile
 # find maglef/*.mag -type f ! -name "user_project_wrapper.mag" -exec shasum {} \; >> manifest && \
 # shasum mag/caravel.mag mag/.magicrc >> manifest
 
-.RECIPE: master_manifest
+.PHONY: master_manifest
 master_manifest:
 	find verilog/rtl/* -type f -exec shasum {} \; > master_manifest && \
 	find verilog/gl/* -type f -exec shasum {} \; >> master_manifest && \
@@ -1367,7 +1398,7 @@ check-python:
 		exit 1;\
 	fi
 	@$(PYTHON_BIN) -c "import sys; assert sys.version_info >= (3, 6), 'Python version less than 3.6'"
-	@echo "Python >=3.8 found."
+	@echo "Python >=3.6 found."
 
 .PHONY: clean-openlane
 clean-openlane:
