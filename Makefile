@@ -1126,9 +1126,8 @@ __gpio_defaults:
 
 .PHONY: update_caravel
 update_caravel:
-	cd caravel/ && \
-		git checkout master && \
-		git pull
+	@echo "The update_caravel target has been removed."
+	@exit 1
 
 ###########################################################################
 
