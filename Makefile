@@ -28,6 +28,7 @@ ARCHIVE_EXT ?= gz
 
 # Needed to rebuild archives that were previously split
 SPLIT_FILES := $(shell find . -type f -name "*.$(ARCHIVE_EXT).00.split")
+SPLIT_FILES_ARCHIVES := $(basename $(basename $(SPLIT_FILES)))
 SPLIT_FILES_SOURCES := $(basename $(basename $(basename $(SPLIT_FILES))))
 
 # Needed to uncompress the existing archives
@@ -274,6 +275,22 @@ uncompress: $(SPLIT_FILES_SOURCES) $(ARCHIVE_SOURCES)
 uncompress-caravel:
 	cd $(CARAVEL_ROOT) && \
 	$(MAKE) uncompress
+
+.SECONDEXPANSION:
+$(SPLIT_FILES_ARCHIVES): %: $$(sort $$(wildcard %.*.split))
+	@cat $? > $@
+	@rm $?
+	@echo "$? -> $@"
+
+.PHONY: unsplit
+unsplit: $(SPLIT_FILES_ARCHIVES)
+	@echo "All split files have been combined!"
+
+# Needed for targets that are run from UPRJ_ROOT for which caravel isn't submoduled.
+.PHONY: unsplit-caravel
+unsplit-caravel:
+	cd $(CARAVEL_ROOT) && \
+	$(MAKE) unsplit
 
 # Digital Wrapper
 # verify that the wrapper was respected
