@@ -1100,7 +1100,7 @@ __final:
 	@rm -rf ./mag/tmp
 
 .PHONY: set_user_id
-set_user_id: check-env check-uid uncompress uncompress-caravel
+set_user_id: check-env check-uid
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __set_user_id
 	@echo "Set user ID completed." 2>&1 | tee -a ./signoff/build/set_user_id.out
 
@@ -1115,7 +1115,7 @@ __set_user_id:
 	python3 $(CARAVEL_ROOT)/scripts/set_user_id.py $(USER_ID) $(shell pwd) 2>&1 | tee ./signoff/build/set_user_id.out
 
 .PHONY: gpio_defaults
-gpio_defaults: check-env uncompress uncompress-caravel
+gpio_defaults: check-env
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __gpio_defaults
 	@echo "GPIO defaults completed." 2>&1 | tee -a ./signoff/build/__gpio_defaults.out
 
