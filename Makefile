@@ -277,7 +277,7 @@ uncompress-caravel:
 
 # Digital Wrapper
 # verify that the wrapper was respected
-.PHONY xor-wrapper
+.PHONY: xor-wrapper
 xor-wrapper:
 	@echo "The xor-wrapper target has been removed."
 	@echo "This check is part of mpw_precheck."
@@ -285,7 +285,7 @@ xor-wrapper:
 
 # Analog Wrapper
 # verify that the wrapper was respected
-.PHONY xor-analog-wrapper
+.PHONY: xor-analog-wrapper
 xor-analog-wrapper:
 	@echo "The xor-analog-wrapper target has been removed."
 	@echo "This check is part of mpw_precheck."
@@ -1273,8 +1273,8 @@ master_manifest:
 	ls verilog/rtl/*.$(ARCHIVE_EXT) verilog/gl/*.$(ARCHIVE_EXT) lef/*.lef.$(ARCHIVE_EXT) def/*.def.$(ARCHIVE_EXT) mag/*.mag.$(ARCHIVE_EXT) \
 		maglef/*.mag.$(ARCHIVE_EXT) spi/lvs/*.spice.$(ARCHIVE_EXT) gds/*.gds.$(ARCHIVE_EXT) | \
 	sed 's/\.'$(ARCHIVE_EXT)'\>//g' > manifest.compressed.list && sleep 2
-	find verilog/rtl/* -type f -exec shasum {} \; > master_manifest && \
-	find verilog/gl/* -type f -exec shasum {} \; >> master_manifest && \
+	find verilog/rtl -type f -not -name "*.$(ARCHIVE_EXT)" -exec shasum {} \; > master_manifest && \
+	find verilog/gl -type f -not -name "*.$(ARCHIVE_EXT)" -exec shasum {} \; >> master_manifest && \
 	shasum scripts/set_user_id.py scripts/generate_fill.py scripts/compositor.py >> master_manifest && \
 	find lef -name "*.lef" -type f -exec shasum {} \; >> master_manifest && \
 	find def -name "*.def" -type f -exec shasum {} \; >> master_manifest && \
