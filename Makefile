@@ -650,7 +650,7 @@ caravel_timing_typ: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v c
 		-e "s|{{TEMPERATURE}}|025C|g" \
 		-e "s|{{LOW_VOLTAGE}}|1v80|g" \
 		-e "s|{{HIGH_VOLTAGE}}|3v30|g" $(CARAVEL_ROOT)/scripts/caravel_timing.tcl > ./def/tmp/caravel_timing_typ.tcl
-#	sta -exit ./def/tmp/caravel_timing_typ.tcl | tee ./signoff/caravel/caravel_timing_typ.log 
+	sta -exit ./def/tmp/caravel_timing_typ.tcl | tee ./signoff/caravel/caravel_timing_typ.log 
 
 caravel_timing_slow: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v check-mcw
 	mkdir -p ./def/tmp
@@ -667,7 +667,7 @@ caravel_timing_slow: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v 
 		-e "s|{{TEMPERATURE}}|100C|g" \
 		-e "s|{{LOW_VOLTAGE}}|1v60|g" \
 		-e "s|{{HIGH_VOLTAGE}}|3v00|g" $(CARAVEL_ROOT)/scripts/caravel_timing.tcl > ./def/tmp/caravel_timing_slow.tcl
-#	sta -exit ./def/tmp/caravel_timing_slow.tcl | tee ./signoff/caravel/caravel_timing_slow.log 
+	sta -exit ./def/tmp/caravel_timing_slow.tcl | tee ./signoff/caravel/caravel_timing_slow.log 
 
 caravel_timing_fast: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v check-mcw
 	mkdir -p ./def/tmp
@@ -684,7 +684,7 @@ caravel_timing_fast: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v 
 		-e "s|{{TEMPERATURE}}|n40C|g" \
 		-e "s|{{LOW_VOLTAGE}}|1v95|g" \
 		-e "s|{{HIGH_VOLTAGE}}|5v50|g" $(CARAVEL_ROOT)/scripts/caravel_timing.tcl > ./def/tmp/caravel_timing_fast.tcl
-#	sta -exit ./def/tmp/caravel_timing_fast.tcl | tee ./signoff/caravel/caravel_timing_fast.log 
+	sta -exit ./def/tmp/caravel_timing_fast.tcl | tee ./signoff/caravel/caravel_timing_fast.log 
 
 ###########################################################################
 .PHONY: generate_fill
