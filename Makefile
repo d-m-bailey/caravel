@@ -101,7 +101,7 @@ OPEN_PDKS_COMMIT ?= 12df12e2e74145e31c5a13de02f9a1e176b56e67
 .DEFAULT_GOAL := ship
 # We need portable GDS_FILE pointers...
 .PHONY: ship
-ship: check-env uncompress uncompress-caravel
+ship: check-env unsplit unsplit-caravel
 	@echo "Running make ship in the foreground..."
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __ship
 	@echo "Make ship completed." 2>&1 | tee -a ./signoff/build/make_ship.out
@@ -139,7 +139,7 @@ __ship:
 	@cd $(CARAVEL_ROOT)/mag && PDKPATH=${PDK_ROOT}/$(PDK) MAGTYPE=mag magic -noc -dnull -rcfile ./.magicrc $(UPRJ_ROOT)/mag/mag2gds_caravel.tcl 2>&1 | tee $(UPRJ_ROOT)/signoff/build/make_ship.out
 ###	@rm $(UPRJ_ROOT)/mag/mag2gds_caravel.tcl
 
-truck: check-env uncompress uncompress-caravel
+truck: check-env unsplit unsplit-caravel
 	@echo "Running make truck in the foreground..."
 	mkdir -p ./signoff
 	mkdir -p ./build
@@ -180,7 +180,7 @@ __truck:
 ###	@rm $(UPRJ_ROOT)/mag/mag2gds_caravan.tcl
 
 .PHONY: openframe
-openframe: check-env uncompress uncompress-caravel
+openframe: check-env unsplit unsplit-caravel
 	@echo "Running make openframe in the foreground..."
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __openframe
 	@echo "Make openframe completed." 2>&1 | tee -a ./signoff/build/make_openframe.out
@@ -464,7 +464,7 @@ $(ANTENNA_BLOCKS): antenna-% : ./gds/%.gds
 
 # MAG2GDS
 MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2gds-$(block))
-$(MAG_BLOCKS): mag2gds-% : ./mag/%.mag uncompress
+$(MAG_BLOCKS): mag2gds-% : ./mag/%.mag unsplit unsplit-caravel
 	echo "Converting mag file $* to GDS..."
 	echo "addpath $(CARAVEL_ROOT)/mag/hexdigits;\
 		addpath ${PDKPATH}/libs.ref/sky130_ml_xx_hd/mag;\
@@ -482,7 +482,7 @@ $(MAG_BLOCKS): mag2gds-% : ./mag/%.mag uncompress
 
 # MAG2LEF 
 MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2lef-$(block))
-$(MAG_BLOCKS): mag2lef-% : ./mag/%.mag uncompress
+$(MAG_BLOCKS): mag2lef-% : ./mag/%.mag unsplit unsplit-caravel
 	echo "Converting mag file $* to LEF..."
 	echo "addpath $(CARAVEL_ROOT)/mag/hexdigits;\
 		addpath ${PDKPATH}/libs.ref/sky130_ml_xx_hd/mag;\
@@ -498,7 +498,7 @@ $(MAG_BLOCKS): mag2lef-% : ./mag/%.mag uncompress
 # MAG2DEF 
 # BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
 # MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2lef-$(block))
-# $(MAG_BLOCKS): mag2lef-% : ./mag/%.mag uncompress
+# $(MAG_BLOCKS): mag2lef-% : ./mag/%.mag unsplit unsplit-caravel
 # 	echo "Converting mag file $* to DEF..."
 # 	echo "addpath $(CARAVEL_ROOT)/mag/hexdigits;\
 # 		addpath ${PDKPATH}/libs.ref/sky130_ml_xx_hd/mag;\
@@ -653,7 +653,7 @@ caravel_timing_fast:
 
 ###########################################################################
 .PHONY: generate_fill
-generate_fill: check-env check-uid check-project uncompress
+generate_fill: check-env check-uid check-project unsplit unsplit-caravel
 	@echo "Running generate_fill in the foreground..."
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __generate_fill
 	@echo "Generate fill completed." 2>&1 | tee -a ./signoff/build/generate_fill.out
@@ -666,7 +666,7 @@ __generate_fill:
 
 
 .PHONY: final
-final: check-env check-uid check-project uncompress uncompress-caravel
+final: check-env check-uid check-project unsplit unsplit-caravel
 	$(MAKE) -f $(CARAVEL_ROOT)/Makefile __final
 	@echo "Final build completed." 2>&1 | tee -a ./signoff/build/final_build.out
 
