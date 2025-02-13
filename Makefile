@@ -635,56 +635,21 @@ $(RCX_BLOCKS): rcx-% : ./def/%.def
 	sh -c "cd /caravel; openroad -exit ./def/tmp/sta_$*.tcl |& tee ./def/tmp/sta_$*.log" 
 
 
-caravel_timing_typ: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v check-mcw
-	mkdir -p ./def/tmp
-## Run OpenSTA
-	sed -e "s|{{PDK_ROOT}}|$(PDK_ROOT)|g" \
-		-e "s|{{PDK}}|$(PDK)|g" \
-		-e "s|{{STD_CELL_LIBRARY}}|$(STD_CELL_LIBRARY)|g" \
-		-e "s|{{SPECIAL_VOLTAGE_LIBRARY}}|$(SPECIAL_VOLTAGE_LIBRARY)|g" \
-		-e "s|{{IO_LIBRARY}}|$(IO_LIBRARY)|g" \
-		-e "s|{{MCW_ROOT}}|$(MCW_ROOT)|g" \
-		-e "s|{{CORNER}}|tt|g" \
-		-e "s|{{CORNER_N}}|tt|g" \
-		-e "s|{{CORNER_P}}|tt|g" \
-		-e "s|{{TEMPERATURE}}|025C|g" \
-		-e "s|{{LOW_VOLTAGE}}|1v80|g" \
-		-e "s|{{HIGH_VOLTAGE}}|3v30|g" $(CARAVEL_ROOT)/scripts/caravel_timing.tcl > ./def/tmp/caravel_timing_typ.tcl
-	sta -exit ./def/tmp/caravel_timing_typ.tcl | tee ./signoff/caravel/caravel_timing_typ.log 
+.PHONY: caravel_timing_typ caravel_timing_typ caravel_timing_slow
+caravel_timing_typ:
+	@echo "The caravel_timing_typ: target has been removed."
+	@echo "Please use the caravel-sta target in the caravel_user_project/Makefile"
+	@exit 1
 
-caravel_timing_slow: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v check-mcw
-	mkdir -p ./def/tmp
-## Run OpenSTA
-	sed -e "s|{{PDK_ROOT}}|$(PDK_ROOT)|g" \
-		-e "s|{{PDK}}|$(PDK)|g" \
-		-e "s|{{STD_CELL_LIBRARY}}|$(STD_CELL_LIBRARY)|g" \
-		-e "s|{{SPECIAL_VOLTAGE_LIBRARY}}|$(SPECIAL_VOLTAGE_LIBRARY)|g" \
-		-e "s|{{IO_LIBRARY}}|$(IO_LIBRARY)|g" \
-		-e "s|{{MCW_ROOT}}|$(MCW_ROOT)|g" \
-		-e "s|{{CORNER}}|ss|g" \
-		-e "s|{{CORNER_N}}|ss|g" \
-		-e "s|{{CORNER_P}}|ss|g" \
-		-e "s|{{TEMPERATURE}}|100C|g" \
-		-e "s|{{LOW_VOLTAGE}}|1v60|g" \
-		-e "s|{{HIGH_VOLTAGE}}|3v00|g" $(CARAVEL_ROOT)/scripts/caravel_timing.tcl > ./def/tmp/caravel_timing_slow.tcl
-	sta -exit ./def/tmp/caravel_timing_slow.tcl | tee ./signoff/caravel/caravel_timing_slow.log 
+caravel_timing_slow:
+	@echo "The caravel_timing_slow: target has been removed."
+	@echo "Please use the caravel-sta target in the caravel_user_project/Makefile"
+	@exit 1
 
-caravel_timing_fast: ./def/caravel.def ./sdc/caravel.sdc ./verilog/gl/caravel.v check-mcw
-	mkdir -p ./def/tmp
-## Run OpenSTA
-	sed -e "s|{{PDK_ROOT}}|$(PDK_ROOT)|g" \
-		-e "s|{{PDK}}|$(PDK)|g" \
-		-e "s|{{STD_CELL_LIBRARY}}|$(STD_CELL_LIBRARY)|g" \
-		-e "s|{{SPECIAL_VOLTAGE_LIBRARY}}|$(SPECIAL_VOLTAGE_LIBRARY)|g" \
-		-e "s|{{IO_LIBRARY}}|$(IO_LIBRARY)|g" \
-		-e "s|{{MCW_ROOT}}|$(MCW_ROOT)|g" \
-		-e "s|{{CORNER}}|ff|g" \
-		-e "s|{{CORNER_N}}|ff|g" \
-		-e "s|{{CORNER_P}}|ff|g" \
-		-e "s|{{TEMPERATURE}}|n40C|g" \
-		-e "s|{{LOW_VOLTAGE}}|1v95|g" \
-		-e "s|{{HIGH_VOLTAGE}}|5v50|g" $(CARAVEL_ROOT)/scripts/caravel_timing.tcl > ./def/tmp/caravel_timing_fast.tcl
-	sta -exit ./def/tmp/caravel_timing_fast.tcl | tee ./signoff/caravel/caravel_timing_fast.log 
+caravel_timing_fast:
+	@echo "The caravel_timing_fast: target has been removed."
+	@echo "Please use the caravel-sta target in the caravel_user_project/Makefile"
+	@exit 1
 
 ###########################################################################
 .PHONY: generate_fill
