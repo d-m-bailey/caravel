@@ -308,10 +308,16 @@ xor-analog-wrapper:
 	@echo "This check is part of mpw_precheck."
 	@exit 1
 
+OPENLANE_BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
 # LVS
-BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
-LVS_BLOCKS = $(foreach block, $(BLOCKS), lvs-$(block))
-$(LVS_BLOCKS): lvs-% : ./mag/%.mag ./verilog/gl/%.v
+LVS_MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), lvs-$(block))
+$(LVS_MAG_BLOCKS): lvs-% : ./mag/%.mag ./verilog/gl/%.v
+	@echo "The lvs-* targets have been renamed to lvs-mag-*"
+	@exit 1
+
+LVS_MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), lvs-mag-$(block))
+$(LVS_MAG_BLOCKS): lvs-mag-% : ./mag/%.mag ./verilog/gl/%.v
+	@echo "Warning: the lvs-mag-* recipes may be out-of-date and are not officially supported."
 	echo "Extracting $*"
 	# Clear result directories 
 	rm -rf ./mag/tmp
@@ -359,8 +365,9 @@ $(LVS_BLOCKS): lvs-% : ./mag/%.mag ./verilog/gl/%.v
 	@awk '/^NET mismatches/,0' ./spi/lvs/tmp/$*.v_comp.out
 
 
-LVS_GDS_BLOCKS = $(foreach block, $(BLOCKS), lvs-gds-$(block))
+LVS_GDS_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), lvs-gds-$(block))
 $(LVS_GDS_BLOCKS): lvs-gds-% : ./gds/%.gds ./verilog/gl/%.v
+	@echo "Warning: the lvs-gds-* recipes may be out-of-date and are not officially supported."
 	echo "Extracting $*"
 	# Clear result directories 
 	rm -rf ./gds/tmp
@@ -400,8 +407,9 @@ $(LVS_GDS_BLOCKS): lvs-gds-% : ./gds/%.gds ./verilog/gl/%.v
 
 
 # connect-by-label is enabled here!
-LVS_MAGLEF_BLOCKS = $(foreach block, $(BLOCKS), lvs-maglef-$(block))
+LVS_MAGLEF_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), lvs-maglef-$(block))
 $(LVS_MAGLEF_BLOCKS): lvs-maglef-% : ./mag/%.mag ./verilog/gl/%.v
+	@echo "Warning: the lvs-maglef-* recipes may be out-of-date and are not officially supported."
 	echo "Extracting $*"
 	mkdir -p ./maglef/tmp
 	echo "load $* -dereference;\
@@ -438,8 +446,7 @@ $(LVS_MAGLEF_BLOCKS): lvs-maglef-% : ./mag/%.mag ./verilog/gl/%.v
 	@awk '/^NET mismatches/,0' ./spi/lvs/tmp/$*.v_comp.out
 
 # DRC
-BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
-DRC_BLOCKS = $(foreach block, $(BLOCKS), drc-$(block))
+DRC_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), drc-$(block))
 $(DRC_BLOCKS): drc-% : ./gds/%.gds
 	echo "Running DRC on $*"
 	mkdir -p ./gds/tmp
@@ -447,8 +454,7 @@ $(DRC_BLOCKS): drc-% : ./gds/%.gds
 	@echo "DRC result: ./gds/tmp/$*.drc"
 
 # Antenna
-BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
-ANTENNA_BLOCKS = $(foreach block, $(BLOCKS), antenna-$(block))
+ANTENNA_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), antenna-$(block))
 $(ANTENNA_BLOCKS): antenna-% : ./gds/%.gds
 	echo "Running Antenna Checks on $*"
 	mkdir -p ./gds/tmp
@@ -457,8 +463,7 @@ $(ANTENNA_BLOCKS): antenna-% : ./gds/%.gds
 	@echo "Antenna result: ./gds/tmp/$*.antenna"
 
 # MAG2GDS
-BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
-MAG_BLOCKS = $(foreach block, $(BLOCKS), mag2gds-$(block))
+MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2gds-$(block))
 $(MAG_BLOCKS): mag2gds-% : ./mag/%.mag uncompress
 	echo "Converting mag file $* to GDS..."
 	echo "addpath $(CARAVEL_ROOT)/mag/hexdigits;\
@@ -476,8 +481,7 @@ $(MAG_BLOCKS): mag2gds-% : ./mag/%.mag uncompress
 	mv -f ./mag/$*.gds ./gds/
 
 # MAG2LEF 
-BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
-MAG_BLOCKS = $(foreach block, $(BLOCKS), mag2lef-$(block))
+MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2lef-$(block))
 $(MAG_BLOCKS): mag2lef-% : ./mag/%.mag uncompress
 	echo "Converting mag file $* to LEF..."
 	echo "addpath $(CARAVEL_ROOT)/mag/hexdigits;\
@@ -493,7 +497,7 @@ $(MAG_BLOCKS): mag2lef-% : ./mag/%.mag uncompress
 
 # MAG2DEF 
 # BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
-# MAG_BLOCKS = $(foreach block, $(BLOCKS), mag2lef-$(block))
+# MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2lef-$(block))
 # $(MAG_BLOCKS): mag2lef-% : ./mag/%.mag uncompress
 # 	echo "Converting mag file $* to DEF..."
 # 	echo "addpath $(CARAVEL_ROOT)/mag/hexdigits;\
@@ -512,8 +516,7 @@ help:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 
 # RCX Extraction
-BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
-RCX_BLOCKS = $(foreach block, $(BLOCKS), rcx-$(block))
+RCX_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), rcx-$(block))
 OPENLANE_IMAGE_NAME=efabless/openlane:2021.11.25_01.26.14
 $(RCX_BLOCKS): rcx-% : ./def/%.def 
 	echo "Running RC Extraction on $*"
