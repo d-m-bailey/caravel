@@ -115,6 +115,7 @@ __ship:
 		random seed `$(CARAVEL_ROOT)/scripts/set_user_id.py -report`; \
 		drc off; \
 		crashbackups stop; \
+		locking disable; \
 		addpath hexdigits; \
 		addpath $(MCW_ROOT)/mag; \
 		addpath $(UPRJ_ROOT)/mag; \
@@ -155,6 +156,7 @@ __truck:
 		random seed `$(CARAVEL_ROOT)/scripts/set_user_id.py -report`; \
 		drc off; \
 		crashbackups stop; \
+		locking disable; \
 		addpath hexdigits; \
 		addpath $(MCW_ROOT)/mag; \
 		addpath $(UPRJ_ROOT)/mag; \
@@ -193,6 +195,7 @@ __openframe:
 	@echo "\
 		drc off; \
 		crashbackups stop; \
+		locking disable; \
 		addpath hexdigits; \
 		addpath $(UPRJ_ROOT)/mag; \
 		load openframe_project_wrapper; \

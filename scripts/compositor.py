@@ -164,6 +164,8 @@ if __name__ == '__main__':
     with open(user_project_path + '/mag/compose_final.tcl', 'w') as ofile:
         print('#!/bin/env wish', file=ofile)
         print('drc off', file=ofile)
+        print('crashbackups stop', file=ofile)
+        print('locking disable', file=ofile)
         # Set the random seed from the project ID
         print('random seed ' + user_id_decimal, file=ofile)
 
