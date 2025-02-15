@@ -674,7 +674,7 @@ final: check-env check-uid check-project unsplit unsplit-caravel
 	@echo "Final build completed." 2>&1 | tee -a ./signoff/build/final_build.out
 
 __final:
-	python3 $(CARAVEL_ROOT)/scripts/compositor.py $(USER_ID) $(PROJECT) $(shell pwd) $(CARAVEL_ROOT)/mag $(shell pwd)/gds -keep
+	python3 $(CARAVEL_ROOT)/scripts/compositor.py $(USER_ID) $(PROJECT) $(shell pwd) $(CARAVEL_ROOT)/mag $(shell pwd)/gds $(MCW_ROOT) -keep
 	#mv $(CARAVEL_ROOT)/mag/caravel_$(USER_ID).mag ./mag/
 	@rm -rf ./mag/tmp
 
