@@ -823,12 +823,12 @@ README.rst: README.src.rst docs/source/getting-started.rst docs/source/tool-vers
 				-e's@.. warning::@**WARNING:**@g' \
 				> openlane/README.rst
 				
-venv/manifest.txt: ./requirements.txt
+venv/manifest.txt: $(CARAVEL_ROOT)/requirements.txt
 	$(MAKE) check-python
 	rm -rf ./venv
 	$(PYTHON_BIN) -m venv ./venv
 	./venv/bin/python3 -m pip install --upgrade --no-cache-dir pip
-	./venv/bin/python3 -m pip install --upgrade --no-cache-dir -r requirements.txt
+	./venv/bin/python3 -m pip install --upgrade --no-cache-dir -r $(CARAVEL_ROOT)/requirements.txt
 	./venv/bin/python3 -m pip freeze > $@
 
 ###########################################################################
