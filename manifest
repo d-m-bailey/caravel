@@ -1,4 +1,4 @@
-4442fe364c7c0f04a2626978b59701239f6543c6  scripts/compositor.py
+1781eadd72114903a39199c488f8e9420de3dff7  scripts/compositor.py
 731116709a44d13225170acc83cd34ff9e00fa39  scripts/generate_fill.py
 b8b8dd779cbf6f2583188d2b92feddddfef4847f  scripts/set_user_id.py
 5b0e67cbc4fd8ee8edeb380102e7e7ae07796bcc  verilog/rtl/__openframe_project_wrapper.v
