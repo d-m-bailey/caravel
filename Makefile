@@ -839,7 +839,7 @@ manifest: mag/ maglef/ verilog/rtl/ Makefile
 	find verilog/rtl/* -type f ! -name "caravel_netlists.v" ! -name "user_*.v" ! -name "README" ! -name "defines.v" -exec shasum {} \; > manifest && \
 	shasum scripts/set_user_id.py scripts/generate_fill.py scripts/compositor.py >> manifest
 	# since the order of files returned by find is indeterminate, sort the final output by filename
-	sort -k2,2 -o manifest manifest
+	LC_ALL=C sort -k2,2 -o manifest manifest
 # shasum lef/user_project_wrapper_empty.lef >> manifest
 # find maglef/*.mag -type f ! -name "user_project_wrapper.mag" -exec shasum {} \; >> manifest && \
 # shasum mag/caravel.mag mag/.magicrc >> manifest
@@ -866,7 +866,7 @@ master_manifest:
 		echo "$$( $(UNCOMPRESS) -c $$file | shasum | awk '{print $$1}' )  $$file" >> master_manifest; \
 	done
 	# since the order of files returned by find is indeterminate, sort the final output by filename
-	sort -k2,2 -o master_manifest master_manifest
+	LC_ALL=C sort -k2,2 -o master_manifest master_manifest
 	rm -rf manifest.compressed.list
 	
 .PHONY: check-env
