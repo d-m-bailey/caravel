@@ -903,6 +903,10 @@ check-python:
 	@$(PYTHON_BIN) -c "import sys; assert sys.version_info >= (3, 6), 'Python version less than 3.6'"
 	@echo "Python >=3.6 found."
 
+.PHONY: check-gpio-id
+check-gpio-id: check-uid
+	$(CARAVEL_ROOT)/scripts/run_gpio-id_check caravel_$$USER_ID tapeout/outputs/oas/caravel_$$USER_ID.oas*
+
 .PHONY: clean-openlane
 clean-openlane:
 	rm -rf $(OPENLANE_ROOT)
