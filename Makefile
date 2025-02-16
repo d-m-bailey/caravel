@@ -1459,6 +1459,10 @@ README.rst: README.src.rst docs/source/getting-started.rst docs/source/tool-vers
 				-e's@.. warning::@**WARNING:**@g' \
 				> openlane/README.rst
 
+.PHONY: check-gpio-id
+check-gpio-id: check-uid
+	$(CARAVEL_ROOT)/scripts/run_gpio-id_check caravel_$$USER_ID tapeout/outputs/oas/caravel_$$USER_ID.oas*
+
 .PHONY: clean-openlane
 clean-openlane:
 	rm -rf $(OPENLANE_ROOT)
