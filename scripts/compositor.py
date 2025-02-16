@@ -210,14 +210,14 @@ if __name__ == '__main__':
         # Generate final GDS
         print('puts stdout "Writing final GDS. . . "', file=ofile)
         print('flush stdout', file=ofile)
-        print('gds undefined allow', file=ofile)
+        print('#gds undefined allow', file=ofile)
         print('cif *hier write disable', file=ofile)
         print('gds write ' + gdspath + '/' + project_with_id + '.gds', file=ofile)
         print('quit -noprompt', file=ofile)
 
     myenv = os.environ.copy()
     # Abstract views are appropriate for final composition
-    myenv['MAGTYPE'] = 'maglef'
+    myenv['MAGTYPE'] = 'mag'
 
     if ( not os.path.isfile(magpath + "/" + project + "_core.mag") ):
         if ( os.path.isfile(magpath + "/" + project + "_core.mag.gz") ):
