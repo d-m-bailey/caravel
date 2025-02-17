@@ -313,8 +313,8 @@ xor-analog-wrapper:
 
 OPENLANE_BLOCKS = $(shell cd openlane && find * -maxdepth 0 -type d)
 # LVS
-LVS_MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), lvs-$(block))
-$(LVS_MAG_BLOCKS): lvs-% : ./mag/%.mag ./verilog/gl/%.v
+LVS_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), lvs-$(block))
+$(LVS_BLOCKS): lvs-% : ./mag/%.mag ./verilog/gl/%.v
 	@echo "The lvs-* targets have been renamed to lvs-mag-*"
 	@exit 1
 
@@ -466,8 +466,8 @@ $(ANTENNA_BLOCKS): antenna-% : ./gds/%.gds
 	@echo "Antenna result: ./gds/tmp/$*.antenna"
 
 # MAG2GDS
-MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2gds-$(block))
-$(MAG_BLOCKS): mag2gds-% : ./mag/%.mag unsplit unsplit-caravel
+MAG2GDS_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2gds-$(block))
+$(MAG2GDS_BLOCKS): mag2gds-% : ./mag/%.mag unsplit unsplit-caravel
 	echo "Converting mag file $* to GDS..."
 	echo "addpath $(CARAVEL_ROOT)/mag/hexdigits;\
 		addpath ${PDKPATH}/libs.ref/sky130_ml_xx_hd/mag;\
@@ -484,8 +484,8 @@ $(MAG_BLOCKS): mag2gds-% : ./mag/%.mag unsplit unsplit-caravel
 	mv -f ./mag/$*.gds ./gds/
 
 # MAG2LEF 
-MAG_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2lef-$(block))
-$(MAG_BLOCKS): mag2lef-% : ./mag/%.mag unsplit unsplit-caravel
+MAG2LEF_BLOCKS = $(foreach block, $(OPENLANE_BLOCKS), mag2lef-$(block))
+$(MAG2LEF_BLOCKS): mag2lef-% : ./mag/%.mag unsplit unsplit-caravel
 	echo "Converting mag file $* to LEF..."
 	echo "addpath $(CARAVEL_ROOT)/mag/hexdigits;\
 		addpath ${PDKPATH}/libs.ref/sky130_ml_xx_hd/mag;\
