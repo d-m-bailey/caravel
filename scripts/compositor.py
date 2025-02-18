@@ -32,7 +32,7 @@ def usage():
     print("")
     print("where:")
     print("   <user_id_value>   is a character string of eight hex digits, and")
-    print("   <project>         is a 'caravel' or 'caravan', and")
+    print("   <project>         is 'caravel', 'caravan', or 'caravel_openframe', and")
     print("   <path_to_project> is the path to the project top level directory.")
     print("   <path_to_mag_dir> is the path to the mag directory.")
     print("   <path_to_gds_dir> is the path to the gds directory.")
